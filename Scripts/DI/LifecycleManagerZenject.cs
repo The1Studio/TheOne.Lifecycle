@@ -1,6 +1,6 @@
-#if UNIT_ZENJECT
+#if THEONE_ZENJECT
 #nullable enable
-namespace UniT.Lifecycle.DI
+namespace TheOne.Lifecycle.DI
 {
     using Zenject;
 

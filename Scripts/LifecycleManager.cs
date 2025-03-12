@@ -1,14 +1,14 @@
 ﻿#nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using UniT.Extensions;
-    using UniT.Logging;
+    using TheOne.Extensions;
+    using TheOne.Logging;
     using UnityEngine;
-    using ILogger = UniT.Logging.ILogger;
-    #if UNIT_UNITASK
+    using ILogger = TheOne.Logging.ILogger;
+    #if THEONE_UNITASK
     using System.Threading;
     using Cysharp.Threading.Tasks;
     #else
@@ -76,7 +76,7 @@ namespace UniT.Lifecycle
 
         private bool isLoading;
 
-        #if UNIT_UNITASK
+        #if THEONE_UNITASK
         async UniTask ILifecycleManager.LoadAsync(IProgress<float>? progress, CancellationToken cancellationToken)
         {
             if (this.isLoading)

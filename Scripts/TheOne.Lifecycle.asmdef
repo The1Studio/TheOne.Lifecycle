@@ -1,34 +1,34 @@
 {
-  "name": "UniT.Lifecycle",
-  "rootNamespace": "UniT.Lifecycle",
+  "name": "TheOne.Lifecycle",
+  "rootNamespace": "TheOne.Lifecycle",
   "references": [
-    "UniT.Extensions",
-    "UniT.Logging",
-    "UniT.DI",
+    "TheOne.Extensions",
+    "TheOne.Logging",
+    "TheOne.DI",
     "Zenject",
     "VContainer",
     "UniTask"
   ],
   "versionDefines": [
     {
-      "name": "com.frostbun.unit.di",
+      "name": "com.theone.di",
       "expression": "",
-      "define": "UNIT_DI"
+      "define": "THEONE_DI"
     },
     {
       "name": "com.svermeulen.extenject",
       "expression": "",
-      "define": "UNIT_ZENJECT"
+      "define": "THEONE_ZENJECT"
     },
     {
       "name": "jp.hadashikick.vcontainer",
       "expression": "",
-      "define": "UNIT_VCONTAINER"
+      "define": "THEONE_VCONTAINER"
     },
     {
       "name": "com.cysharp.unitask",
       "expression": "",
-      "define": "UNIT_UNITASK"
+      "define": "THEONE_UNITASK"
     }
   ]
 }

@@ -1,27 +1,27 @@
 {
-  "name": "UniT.Lifecycle.DI",
-  "rootNamespace": "UniT.Lifecycle.DI",
+  "name": "TheOne.Lifecycle.DI",
+  "rootNamespace": "TheOne.Lifecycle.DI",
   "references": [
-    "UniT.Lifecycle",
-    "UniT.DI",
+    "TheOne.Lifecycle",
+    "TheOne.DI",
     "Zenject",
     "VContainer"
   ],
   "versionDefines": [
     {
-      "name": "com.frostbun.unit.di",
+      "name": "com.theone.di",
       "expression": "",
-      "define": "UNIT_DI"
+      "define": "THEONE_DI"
     },
     {
       "name": "com.svermeulen.extenject",
       "expression": "",
-      "define": "UNIT_ZENJECT"
+      "define": "THEONE_ZENJECT"
     },
     {
       "name": "jp.hadashikick.vcontainer",
       "expression": "",
-      "define": "UNIT_VCONTAINER"
+      "define": "THEONE_VCONTAINER"
     }
   ]
 }

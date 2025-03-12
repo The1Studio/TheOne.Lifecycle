@@ -1,9 +1,9 @@
-﻿#if UNIT_VCONTAINER
+﻿#if THEONE_VCONTAINER
 #nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System.Collections.Generic;
-    using UniT.Logging;
+    using TheOne.Logging;
     using UnityEngine.Scripting;
     using VContainer.Internal;
 

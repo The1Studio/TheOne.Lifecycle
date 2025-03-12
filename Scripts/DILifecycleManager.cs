@@ -1,9 +1,9 @@
-﻿#if UNIT_DI
+﻿#if THEONE_DI
 #nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System.Collections.Generic;
-    using UniT.Logging;
+    using TheOne.Logging;
     using UnityEngine.Scripting;
 
     public sealed class DILifecycleManager : LifecycleManager

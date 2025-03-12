@@ -1,7 +1,7 @@
 #nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
-    #if UNIT_UNITASK
+    #if THEONE_UNITASK
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace UniT.Lifecycle
         public void Load();
     }
 
-    #if UNIT_UNITASK
+    #if THEONE_UNITASK
     public interface IAsyncEarlyLoadable
     {
         public UniTask LoadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default);
