@@ -1,8 +1,8 @@
 ﻿#nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System;
-    #if UNIT_UNITASK
+    #if THEONE_UNITASK
     using System.Threading;
     using Cysharp.Threading.Tasks;
     #else
@@ -11,7 +11,7 @@ namespace UniT.Lifecycle
 
     public interface ILifecycleManager : IDisposable
     {
-        #if UNIT_UNITASK
+        #if THEONE_UNITASK
         public UniTask LoadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default);
         #else
         public IEnumerator LoadAsync(Action? callback = null, IProgress<float>? progress = null);
