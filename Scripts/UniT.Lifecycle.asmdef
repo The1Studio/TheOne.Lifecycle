@@ -1,0 +1,33 @@
+{
+  "name": "UniT.Lifecycle",
+  "rootNamespace": "UniT.Lifecycle",
+  "references": [
+    "UniT.Extensions",
+    "UniT.DI",
+    "Zenject",
+    "VContainer",
+    "UniTask"
+  ],
+  "versionDefines": [
+    {
+      "name": "com.frostbun.unit.di",
+      "expression": "",
+      "define": "UNIT_DI"
+    },
+    {
+      "name": "com.svermeulen.extenject",
+      "expression": "",
+      "define": "UNIT_ZENJECT"
+    },
+    {
+      "name": "jp.hadashikick.vcontainer",
+      "expression": "",
+      "define": "UNIT_VCONTAINER"
+    },
+    {
+      "name": "com.cysharp.unitask",
+      "expression": "",
+      "define": "UNIT_UNITASK"
+    }
+  ]
+}
