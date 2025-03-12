@@ -1,13 +1,13 @@
 ﻿#nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using UniT.Extensions;
+    using TheOne.Extensions;
     using UnityEngine;
     using UnityEngine.Scripting;
-    #if UNIT_UNITASK
+    #if THEONE_UNITASK
     using System.Threading;
     using Cysharp.Threading.Tasks;
     #else
@@ -68,7 +68,7 @@ namespace UniT.Lifecycle
             this.resumeListeners = resumeListeners.ToArray();
         }
 
-        #if UNIT_UNITASK
+        #if THEONE_UNITASK
         async UniTask ILifecycleManager.LoadAsync(IProgress<float>? progress, CancellationToken cancellationToken)
         {
             var subProgresses = progress.CreateSubProgresses(3).ToArray();

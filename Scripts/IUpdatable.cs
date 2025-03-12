@@ -1,5 +1,5 @@
 ﻿#nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     public interface IUpdatable
     {

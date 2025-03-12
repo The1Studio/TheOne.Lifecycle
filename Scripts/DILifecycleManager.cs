@@ -1,6 +1,6 @@
-﻿#if UNIT_DI
+﻿#if THEONE_DI
 #nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System.Collections.Generic;
     using UnityEngine.Scripting;
