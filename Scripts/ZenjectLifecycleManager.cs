@@ -1,6 +1,6 @@
-﻿#if UNIT_ZENJECT
+﻿#if THEONE_ZENJECT
 #nullable enable
-namespace UniT.Lifecycle
+namespace TheOne.Lifecycle
 {
     using System.Collections.Generic;
     using UnityEngine.Scripting;

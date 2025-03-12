@@ -1,8 +1,8 @@
-﻿#if UNIT_DI
+﻿#if THEONE_DI
 #nullable enable
-namespace UniT.Lifecycle.DI
+namespace TheOne.Lifecycle.DI
 {
-    using UniT.DI;
+    using TheOne.DI;
 
     public static class LifecycleManagerDI
     {

@@ -1,6 +1,6 @@
-#if UNIT_VCONTAINER
+#if THEONE_VCONTAINER
 #nullable enable
-namespace UniT.Lifecycle.DI
+namespace TheOne.Lifecycle.DI
 {
     using VContainer;
 
