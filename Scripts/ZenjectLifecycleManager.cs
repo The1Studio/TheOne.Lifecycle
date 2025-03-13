@@ -2,12 +2,11 @@
 #nullable enable
 namespace UniT.Lifecycle
 {
-    using System;
     using System.Collections.Generic;
     using UnityEngine.Scripting;
     using Zenject;
 
-    public sealed class ZenjectLifecycleManager : LifecycleManager, IDisposable
+    public sealed class ZenjectLifecycleManager : LifecycleManager
     {
         [Preserve]
         public ZenjectLifecycleManager(
@@ -41,8 +40,6 @@ namespace UniT.Lifecycle
         )
         {
         }
-
-        void IDisposable.Dispose() => this.Unload();
     }
 }
 #endif

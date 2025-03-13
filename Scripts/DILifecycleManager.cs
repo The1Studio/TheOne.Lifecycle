@@ -2,16 +2,11 @@
 #nullable enable
 namespace UniT.Lifecycle
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using UniT.Extensions;
     using UnityEngine.Scripting;
 
     public sealed class DILifecycleManager : LifecycleManager
     {
-        private readonly IReadOnlyList<IDisposable> disposableServices;
-
         [Preserve]
         public DILifecycleManager(
             IEnumerable<IEarlyLoadable>      earlyLoadableServices,
@@ -26,8 +21,7 @@ namespace UniT.Lifecycle
             IEnumerable<IFocusGainListener>  focusGainListeners,
             IEnumerable<IFocusLostListener>  focusLostListeners,
             IEnumerable<IPauseListener>      pauseListeners,
-            IEnumerable<IResumeListener>     resumeListeners,
-            IEnumerable<IDisposable>         disposableServices
+            IEnumerable<IResumeListener>     resumeListeners
         ) : base(
             earlyLoadableServices,
             asyncEarlyLoadableServices,
@@ -44,13 +38,6 @@ namespace UniT.Lifecycle
             resumeListeners
         )
         {
-            this.disposableServices = disposableServices.ToArray();
-        }
-
-        public new void Unload()
-        {
-            this.disposableServices.ForEach(service => service.Dispose());
-            base.Unload();
         }
     }
 }

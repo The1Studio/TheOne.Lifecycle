@@ -2,12 +2,11 @@
 #nullable enable
 namespace UniT.Lifecycle
 {
-    using System;
     using System.Collections.Generic;
     using UnityEngine.Scripting;
     using VContainer.Internal;
 
-    public sealed class VContainerLifecycleManager : LifecycleManager, IDisposable
+    public sealed class VContainerLifecycleManager : LifecycleManager
     {
         [Preserve]
         public VContainerLifecycleManager(
@@ -41,8 +40,6 @@ namespace UniT.Lifecycle
         )
         {
         }
-
-        void IDisposable.Dispose() => this.Unload();
     }
 }
 #endif

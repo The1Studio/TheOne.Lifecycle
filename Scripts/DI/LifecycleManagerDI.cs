@@ -9,7 +9,7 @@ namespace UniT.Lifecycle.DI
         public static void AddLifecycleManager(this DependencyContainer container)
         {
             if (container.Contains<ILifecycleManager>()) return;
-            container.AddInterfacesAndSelf<DILifecycleManager>();
+            container.AddInterfaces<DILifecycleManager>();
         }
     }
 }

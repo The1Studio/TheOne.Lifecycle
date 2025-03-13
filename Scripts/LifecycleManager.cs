@@ -139,7 +139,7 @@ namespace UniT.Lifecycle
             this.resumeListeners.ForEach(listener => this.eventListener.Resumed += listener.OnResume);
         }
 
-        protected void Unload()
+        private void Unload()
         {
             if (!this.eventListener) return;
 
@@ -155,6 +155,10 @@ namespace UniT.Lifecycle
 
             this.eventListener.gameObject.Destroy();
         }
+
+        void IDisposable.Dispose() => this.Unload();
+
+        ~LifecycleManager() => this.Unload();
 
         private sealed class EventListener : MonoBehaviour
         {

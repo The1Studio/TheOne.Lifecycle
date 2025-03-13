@@ -9,7 +9,7 @@ namespace UniT.Lifecycle
     using System.Collections;
     #endif
 
-    public interface ILifecycleManager
+    public interface ILifecycleManager : IDisposable
     {
         #if UNIT_UNITASK
         public UniTask LoadAsync(IProgress<float>? progress = null, CancellationToken cancellationToken = default);
