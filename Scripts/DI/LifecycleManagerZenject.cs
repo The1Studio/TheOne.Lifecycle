@@ -9,7 +9,7 @@ namespace UniT.Lifecycle.DI
         public static void BindLifecycleManager(this DiContainer container)
         {
             if (container.HasBinding<ILifecycleManager>()) return;
-            container.BindInterfacesTo<ZenjectLifecycleManager>().AsSingle().CopyIntoAllSubContainers();
+            container.BindInterfacesTo<ZenjectLifecycleManager>().AsSingle();
         }
     }
 }

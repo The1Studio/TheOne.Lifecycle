@@ -9,7 +9,7 @@ namespace UniT.Lifecycle.DI
         public static void RegisterLifecycleManager(this IContainerBuilder builder)
         {
             if (builder.Exists(typeof(ILifecycleManager), true)) return;
-            builder.Register<VContainerLifecycleManager>(Lifetime.Scoped).AsImplementedInterfaces();
+            builder.Register<VContainerLifecycleManager>(Lifetime.Singleton).AsImplementedInterfaces();
         }
     }
 }
