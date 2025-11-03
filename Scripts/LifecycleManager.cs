@@ -33,7 +33,6 @@ namespace UniT.Lifecycle
         private readonly IReadOnlyList<IPauseListener>  pauseListeners;
         private readonly IReadOnlyList<IResumeListener> resumeListeners;
 
-        [Preserve]
         protected LifecycleManager(
             IEnumerable<IEarlyLoadable>      earlyLoadableServices,
             IEnumerable<IAsyncEarlyLoadable> asyncEarlyLoadableServices,
