@@ -6,7 +6,6 @@ namespace UniT.Lifecycle
     using System.Linq;
     using UniT.Extensions;
     using UnityEngine;
-    using UnityEngine.Scripting;
     #if UNIT_UNITASK
     using System.Threading;
     using Cysharp.Threading.Tasks;
@@ -70,6 +69,9 @@ namespace UniT.Lifecycle
         #if UNIT_UNITASK
         async UniTask ILifecycleManager.LoadAsync(IProgress<float>? progress, CancellationToken cancellationToken)
         {
+            if (this.eventListener) return;
+            this.eventListener = new GameObject(nameof(LifecycleManager)).AddComponent<EventListener>().DontDestroyOnLoad();
+
             var subProgresses = progress.CreateSubProgresses(3).ToArray();
             this.earlyLoadableServices.ForEach(service => service.Load());
             await this.asyncEarlyLoadableServices.ForEachAsync(
@@ -97,6 +99,9 @@ namespace UniT.Lifecycle
         #else
         IEnumerator ILifecycleManager.LoadAsync(Action? callback, IProgress<float>? progress)
         {
+            if (this.eventListener) return;
+            this.eventListener = new GameObject(nameof(LifecycleManager)).AddComponent<EventListener>().DontDestroyOnLoad();
+
             var subProgresses = progress.CreateSubProgresses(3).ToArray();
             this.earlyLoadableServices.ForEach(service => service.Load());
             yield return this.asyncEarlyLoadableServices.ForEachAsync(
@@ -121,12 +126,10 @@ namespace UniT.Lifecycle
         }
         #endif
 
-        private EventListener? eventListener;
+        private EventListener eventListener = null!;
 
         private void Load()
         {
-            this.eventListener = new GameObject(nameof(LifecycleManager)).AddComponent<EventListener>().DontDestroyOnLoad();
-
             this.updatableServices.ForEach(service => this.eventListener.Updating           += service.Update);
             this.lateUpdatableServices.ForEach(service => this.eventListener.LateUpdating   += service.LateUpdate);
             this.fixedUpdatableServices.ForEach(service => this.eventListener.FixedUpdating += service.FixedUpdate);
