@@ -66,62 +66,87 @@ namespace UniT.Lifecycle
             this.resumeListeners = resumeListeners.ToArray();
         }
 
+        private bool isLoading;
+
         #if UNIT_UNITASK
         async UniTask ILifecycleManager.LoadAsync(IProgress<float>? progress, CancellationToken cancellationToken)
         {
-            if (this.eventListener) return;
-            this.eventListener = new GameObject(nameof(LifecycleManager)).AddComponent<EventListener>().DontDestroyOnLoad();
+            if (this.isLoading)
+            {
+                await UniTask.WaitUntil(this, @this => !@this.isLoading, cancellationToken: cancellationToken);
+                if (this.eventListener) return;
+            }
 
-            var subProgresses = progress.CreateSubProgresses(3).ToArray();
-            this.earlyLoadableServices.ForEach(service => service.Load());
-            await this.asyncEarlyLoadableServices.ForEachAsync(
-                (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
-                subProgresses[0],
-                cancellationToken
-            );
-            subProgresses[0]?.Report(1);
-            this.loadableServices.ForEach(service => service.Load());
-            await this.asyncLoadableServices.ForEachAsync(
-                (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
-                subProgresses[1],
-                cancellationToken
-            );
-            subProgresses[1]?.Report(1);
-            this.lateLoadableServices.ForEach(service => service.Load());
-            await this.asyncLateLoadableServices.ForEachAsync(
-                (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
-                subProgresses[2],
-                cancellationToken
-            );
-            subProgresses[2]?.Report(1);
-            this.Load();
+            this.isLoading = true;
+            try
+            {
+                var subProgresses = progress.CreateSubProgresses(3).ToArray();
+                this.earlyLoadableServices.ForEach(service => service.Load());
+                await this.asyncEarlyLoadableServices.ForEachAsync(
+                    (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
+                    subProgresses[0],
+                    cancellationToken
+                );
+                subProgresses[0]?.Report(1);
+                this.loadableServices.ForEach(service => service.Load());
+                await this.asyncLoadableServices.ForEachAsync(
+                    (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
+                    subProgresses[1],
+                    cancellationToken
+                );
+                subProgresses[1]?.Report(1);
+                this.lateLoadableServices.ForEach(service => service.Load());
+                await this.asyncLateLoadableServices.ForEachAsync(
+                    (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
+                    subProgresses[2],
+                    cancellationToken
+                );
+                subProgresses[2]?.Report(1);
+                this.Load();
+            }
+            finally
+            {
+                this.isLoading = false;
+            }
         }
         #else
         IEnumerator ILifecycleManager.LoadAsync(Action? callback, IProgress<float>? progress)
         {
-            if (this.eventListener) return;
-            this.eventListener = new GameObject(nameof(LifecycleManager)).AddComponent<EventListener>().DontDestroyOnLoad();
+            if (this.isLoading)
+            {
+                yield return new WaitUntil(() => !this.isLoading);
+                if (this.eventListener) yield break;
+            }
 
-            var subProgresses = progress.CreateSubProgresses(3).ToArray();
-            this.earlyLoadableServices.ForEach(service => service.Load());
-            yield return this.asyncEarlyLoadableServices.ForEachAsync(
-                (service, progress) => service.LoadAsync(progress: progress),
-                progress: subProgresses[0]
-            );
-            subProgresses[0]?.Report(1);
-            this.loadableServices.ForEach(service => service.Load());
-            yield return this.asyncLoadableServices.ForEachAsync(
-                (service, progress) => service.LoadAsync(progress: progress),
-                progress: subProgresses[1]
-            );
-            subProgresses[1]?.Report(1);
-            this.lateLoadableServices.ForEach(service => service.Load());
-            yield return this.asyncLateLoadableServices.ForEachAsync(
-                (service, progress) => service.LoadAsync(progress: progress),
-                progress: subProgresses[2]
-            );
-            subProgresses[2]?.Report(1);
-            this.Load();
+            this.isLoading = true;
+            try
+            {
+                var subProgresses = progress.CreateSubProgresses(3).ToArray();
+                this.earlyLoadableServices.ForEach(service => service.Load());
+                yield return this.asyncEarlyLoadableServices.ForEachAsync(
+                    (service, progress) => service.LoadAsync(progress: progress),
+                    progress: subProgresses[0]
+                );
+                subProgresses[0]?.Report(1);
+                this.loadableServices.ForEach(service => service.Load());
+                yield return this.asyncLoadableServices.ForEachAsync(
+                    (service, progress) => service.LoadAsync(progress: progress),
+                    progress: subProgresses[1]
+                );
+                subProgresses[1]?.Report(1);
+                this.lateLoadableServices.ForEach(service => service.Load());
+                yield return this.asyncLateLoadableServices.ForEachAsync(
+                    (service, progress) => service.LoadAsync(progress: progress),
+                    progress: subProgresses[2]
+                );
+                subProgresses[2]?.Report(1);
+                this.Load();
+            }
+            finally
+            {
+                this.isLoading = false;
+            }
+
             callback?.Invoke();
         }
         #endif
@@ -130,6 +155,8 @@ namespace UniT.Lifecycle
 
         private void Load()
         {
+            this.eventListener = new GameObject(nameof(LifecycleManager)).AddComponent<EventListener>().DontDestroyOnLoad();
+
             this.updatableServices.ForEach(service => this.eventListener.Updating           += service.Update);
             this.lateUpdatableServices.ForEach(service => this.eventListener.LateUpdating   += service.LateUpdate);
             this.fixedUpdatableServices.ForEach(service => this.eventListener.FixedUpdating += service.FixedUpdate);
