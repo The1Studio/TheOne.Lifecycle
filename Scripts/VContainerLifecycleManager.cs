@@ -3,6 +3,7 @@
 namespace UniT.Lifecycle
 {
     using System.Collections.Generic;
+    using UniT.Logging;
     using UnityEngine.Scripting;
     using VContainer.Internal;
 
@@ -22,7 +23,8 @@ namespace UniT.Lifecycle
             ContainerLocal<IEnumerable<IFocusGainListener>>  focusGainListeners,
             ContainerLocal<IEnumerable<IFocusLostListener>>  focusLostListeners,
             ContainerLocal<IEnumerable<IPauseListener>>      pauseListeners,
-            ContainerLocal<IEnumerable<IResumeListener>>     resumeListeners
+            ContainerLocal<IEnumerable<IResumeListener>>     resumeListeners,
+            ILoggerManager                                   loggerManager
         ) : base(
             earlyLoadableServices.Value,
             asyncEarlyLoadableServices.Value,
@@ -36,7 +38,8 @@ namespace UniT.Lifecycle
             focusGainListeners.Value,
             focusLostListeners.Value,
             pauseListeners.Value,
-            resumeListeners.Value
+            resumeListeners.Value,
+            loggerManager
         )
         {
         }

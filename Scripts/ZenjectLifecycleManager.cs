@@ -3,6 +3,7 @@
 namespace UniT.Lifecycle
 {
     using System.Collections.Generic;
+    using UniT.Logging;
     using UnityEngine.Scripting;
     using Zenject;
 
@@ -22,7 +23,8 @@ namespace UniT.Lifecycle
             [InjectLocal] IEnumerable<IFocusGainListener>  focusGainListeners,
             [InjectLocal] IEnumerable<IFocusLostListener>  focusLostListeners,
             [InjectLocal] IEnumerable<IPauseListener>      pauseListeners,
-            [InjectLocal] IEnumerable<IResumeListener>     resumeListeners
+            [InjectLocal] IEnumerable<IResumeListener>     resumeListeners,
+            ILoggerManager                                 loggerManager
         ) : base(
             earlyLoadableServices,
             asyncEarlyLoadableServices,
@@ -36,7 +38,8 @@ namespace UniT.Lifecycle
             focusGainListeners,
             focusLostListeners,
             pauseListeners,
-            resumeListeners
+            resumeListeners,
+            loggerManager
         )
         {
         }

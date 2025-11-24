@@ -5,7 +5,9 @@ namespace UniT.Lifecycle
     using System.Collections.Generic;
     using System.Linq;
     using UniT.Extensions;
+    using UniT.Logging;
     using UnityEngine;
+    using ILogger = UniT.Logging.ILogger;
     #if UNIT_UNITASK
     using System.Threading;
     using Cysharp.Threading.Tasks;
@@ -32,6 +34,8 @@ namespace UniT.Lifecycle
         private readonly IReadOnlyList<IPauseListener>  pauseListeners;
         private readonly IReadOnlyList<IResumeListener> resumeListeners;
 
+        private readonly ILogger logger;
+
         protected LifecycleManager(
             IEnumerable<IEarlyLoadable>      earlyLoadableServices,
             IEnumerable<IAsyncEarlyLoadable> asyncEarlyLoadableServices,
@@ -45,7 +49,8 @@ namespace UniT.Lifecycle
             IEnumerable<IFocusGainListener>  focusGainListeners,
             IEnumerable<IFocusLostListener>  focusLostListeners,
             IEnumerable<IPauseListener>      pauseListeners,
-            IEnumerable<IResumeListener>     resumeListeners
+            IEnumerable<IResumeListener>     resumeListeners,
+            ILoggerManager                   loggerManager
         )
         {
             this.earlyLoadableServices      = earlyLoadableServices.ToArray();
@@ -64,6 +69,9 @@ namespace UniT.Lifecycle
 
             this.pauseListeners  = pauseListeners.ToArray();
             this.resumeListeners = resumeListeners.ToArray();
+
+            this.logger = loggerManager.GetLogger(this);
+            this.logger.Debug("Constructed");
         }
 
         private bool isLoading;
@@ -74,33 +82,76 @@ namespace UniT.Lifecycle
             if (this.isLoading)
             {
                 await UniTask.WaitUntil(this, @this => !@this.isLoading, cancellationToken: cancellationToken);
-                if (this.eventListener) return;
             }
+
+            if (this.eventListener) return;
 
             this.isLoading = true;
             try
             {
                 var subProgresses = progress.CreateSubProgresses(3).ToArray();
-                this.earlyLoadableServices.ForEach(service => service.Load());
+                this.logger.Debug("Early loading");
+                this.earlyLoadableServices.ForEach(service =>
+                {
+                    var name = service.GetType().Name;
+                    this.logger.Debug($"Loading {name}");
+                    service.Load();
+                    this.logger.Debug($"Loaded {name}");
+                });
                 await this.asyncEarlyLoadableServices.ForEachAsync(
-                    (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
+                    async (service, progress, cancellationToken) =>
+                    {
+                        var name = service.GetType().Name;
+                        this.logger.Debug($"Loading {name}");
+                        await service.LoadAsync(progress, cancellationToken);
+                        this.logger.Debug($"Loaded {name}");
+                    },
                     subProgresses[0],
                     cancellationToken
                 );
+                this.logger.Debug("Early loaded");
                 subProgresses[0]?.Report(1);
-                this.loadableServices.ForEach(service => service.Load());
+                this.logger.Debug("Loading");
+                this.loadableServices.ForEach(service =>
+                {
+                    var name = service.GetType().Name;
+                    this.logger.Debug($"Loading {name}");
+                    service.Load();
+                    this.logger.Debug($"Loaded {name}");
+                });
                 await this.asyncLoadableServices.ForEachAsync(
-                    (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
+                    async (service, progress, cancellationToken) =>
+                    {
+                        var name = service.GetType().Name;
+                        this.logger.Debug($"Loading {name}");
+                        await service.LoadAsync(progress, cancellationToken);
+                        this.logger.Debug($"Loaded {name}");
+                    },
                     subProgresses[1],
                     cancellationToken
                 );
+                this.logger.Debug("Loaded");
                 subProgresses[1]?.Report(1);
-                this.lateLoadableServices.ForEach(service => service.Load());
+                this.logger.Debug("Late loading");
+                this.lateLoadableServices.ForEach(service =>
+                {
+                    var name = service.GetType().Name;
+                    this.logger.Debug($"Loading {name}");
+                    service.Load();
+                    this.logger.Debug($"Loaded {name}");
+                });
                 await this.asyncLateLoadableServices.ForEachAsync(
-                    (service, progress, cancellationToken) => service.LoadAsync(progress, cancellationToken),
+                    async (service, progress, cancellationToken) =>
+                    {
+                        var name = service.GetType().Name;
+                        this.logger.Debug($"Loading {name}");
+                        await service.LoadAsync(progress, cancellationToken);
+                        this.logger.Debug($"Loaded {name}");
+                    },
                     subProgresses[2],
                     cancellationToken
                 );
+                this.logger.Debug("Late loaded");
                 subProgresses[2]?.Report(1);
                 this.Load();
             }
@@ -115,30 +166,70 @@ namespace UniT.Lifecycle
             if (this.isLoading)
             {
                 yield return new WaitUntil(() => !this.isLoading);
-                if (this.eventListener) yield break;
             }
+
+            if (this.eventListener) yield break;
 
             this.isLoading = true;
             try
             {
                 var subProgresses = progress.CreateSubProgresses(3).ToArray();
-                this.earlyLoadableServices.ForEach(service => service.Load());
+                this.logger.Debug("Early loading");
+                this.earlyLoadableServices.ForEach(service =>
+                {
+                    var name = service.GetType().Name;
+                    this.logger.Debug($"Loading {name}");
+                    service.Load();
+                    this.logger.Debug($"Loaded {name}");
+                });
                 yield return this.asyncEarlyLoadableServices.ForEachAsync(
-                    (service, progress) => service.LoadAsync(progress: progress),
+                    (service, progress) =>
+                    {
+                        var name = service.GetType().Name;
+                        this.logger.Debug($"Loading {name}");
+                        return service.LoadAsync(() => this.logger.Debug($"Loaded {name}"), progress);
+                    },
                     progress: subProgresses[0]
                 );
+                this.logger.Debug("Early loaded");
                 subProgresses[0]?.Report(1);
-                this.loadableServices.ForEach(service => service.Load());
+                this.logger.Debug("Loading");
+                this.loadableServices.ForEach(service =>
+                {
+                    var name = service.GetType().Name;
+                    this.logger.Debug($"Loading {name}");
+                    service.Load();
+                    this.logger.Debug($"Loaded {name}");
+                });
                 yield return this.asyncLoadableServices.ForEachAsync(
-                    (service, progress) => service.LoadAsync(progress: progress),
+                    (service, progress) =>
+                    {
+                        var name = service.GetType().Name;
+                        this.logger.Debug($"Loading {name}");
+                        return service.LoadAsync(() => this.logger.Debug($"Loaded {name}"), progress);
+                    },
                     progress: subProgresses[1]
                 );
+                this.logger.Debug("Loaded");
                 subProgresses[1]?.Report(1);
-                this.lateLoadableServices.ForEach(service => service.Load());
+                this.logger.Debug("Late loading");
+                this.lateLoadableServices.ForEach(service =>
+                {
+                    var name = service.GetType().Name;
+                    this.logger.Debug($"Loading {name}");
+                    service.Load();
+                    this.logger.Debug($"Loaded {name}");
+                });
                 yield return this.asyncLateLoadableServices.ForEachAsync(
-                    (service, progress) => service.LoadAsync(progress: progress),
+                    (service, progress) =>
+                    {
+                        var name = service.GetType().Name;
+                        this.logger.Debug($"Loading {name}");
+                        return service.LoadAsync(() => this.logger.Debug($"Loaded {name}"), progress);
+                    },
                     progress: subProgresses[2]
                 );
+                this.logger.Debug("Late loaded");
                 subProgresses[2]?.Report(1);
                 this.Load();
             }

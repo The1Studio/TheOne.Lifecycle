@@ -3,6 +3,7 @@
 namespace UniT.Lifecycle
 {
     using System.Collections.Generic;
+    using UniT.Logging;
     using UnityEngine.Scripting;
 
     public sealed class DILifecycleManager : LifecycleManager
@@ -21,7 +22,8 @@ namespace UniT.Lifecycle
             IEnumerable<IFocusGainListener>  focusGainListeners,
             IEnumerable<IFocusLostListener>  focusLostListeners,
             IEnumerable<IPauseListener>      pauseListeners,
-            IEnumerable<IResumeListener>     resumeListeners
+            IEnumerable<IResumeListener>     resumeListeners,
+            ILoggerManager                   loggerManager
         ) : base(
             earlyLoadableServices,
             asyncEarlyLoadableServices,
@@ -35,7 +37,8 @@ namespace UniT.Lifecycle
             focusGainListeners,
             focusLostListeners,
             pauseListeners,
-            resumeListeners
+            resumeListeners,
+            loggerManager
         )
         {
         }

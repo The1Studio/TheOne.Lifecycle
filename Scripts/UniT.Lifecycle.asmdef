@@ -3,6 +3,7 @@
   "rootNamespace": "UniT.Lifecycle",
   "references": [
     "UniT.Extensions",
+    "UniT.Logging",
     "UniT.DI",
     "Zenject",
     "VContainer",
